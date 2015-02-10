@@ -8,7 +8,7 @@ var app = require('../app');
 var debug = require('debug')('HappyBird-ChatRoom:server');
 var http = require('http');
 var setting = require('../setting')
-
+var io = require('../socketIO')
 /**
  * Get port from environment and store in Express.
  */
@@ -29,6 +29,7 @@ var server = http.createServer(app);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+io.listen(server);
 
 /**
  * Normalize a port into a number, string, or false.

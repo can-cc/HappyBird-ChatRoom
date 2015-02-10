@@ -15,7 +15,7 @@ router.get('/im', function(req, res, next) {
   res.render('index', { title: 'im' });
 });
 
-app.post('/api/broadcast/', helper.requireAuthentication, helper.sanitizeMessage,
+router.post('/api/broadcast/', helper.requireAuthentication, helper.sanitizeMessage,
     function (req, res) {
       helper.sendBroadcast(req.sanitizedMessage);
       res.send(201, "Message sent to all rooms");

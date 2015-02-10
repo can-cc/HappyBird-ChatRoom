@@ -69,6 +69,7 @@
 
     // User joins room
     socket.on('userJoinsRoom', function(data) {
+        console.log('i log in ');
         console.log("userJoinsRoom: %s", JSON.stringify(data));
         // Log join in conversation
         addMessage(data);
@@ -251,8 +252,10 @@
 
     // Send new message
     $('#b_send_message').click(function(eventObject) {
+
         eventObject.preventDefault();
         if ($('#message_text').val() != "") {
+            alert('fuck');
             socket.emit('newMessage', {'room':getCurrentRoom(), 'msg':getMessageText()});
         }
     });

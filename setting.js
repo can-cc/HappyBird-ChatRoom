@@ -4,11 +4,11 @@
 
 setting = {
     debug: true,
-    PORT: 4000,
+    PORT: 8888,
     redisPort: 6379,
     dbHost: '127.0.0.1',
     dbOptions: {},
-    mainroom: 'PublicRoom'
-}
+    mainroom: 'MainRoom'
+};
 
 module.exports = setting;
