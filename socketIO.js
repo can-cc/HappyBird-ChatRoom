@@ -48,7 +48,6 @@ io.sockets.on('connection', function(socket) {
             _.each(data.rooms, function(room) {
                 room = room.replace(" ","");
                 socket.join(room);
-                console.log('haha');
                 logger.emit('newEvent', 'userJoinsRoom', {'socket':socket.id, 'username':username, 'room':room});
 
                 // Confirm subscription to user

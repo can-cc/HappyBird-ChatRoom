@@ -1,35 +1,208 @@
 0 info it worked if it ends with ok
-1 verbose cli [ 'node', '/usr/local/bin/npm', 'start' ]
+1 verbose cli [ 'node', '/usr/local/bin/npm', 'install', '-g', 'yo' ]
 2 info using npm@2.1.18
 3 info using node@v0.10.35
-4 verbose run-script [ 'prestart', 'start', 'poststart' ]
-5 info prestart HappyBird-ChatRoom@0.0.0
-6 info start HappyBird-ChatRoom@0.0.0
-7 verbose unsafe-perm in lifecycle true
-8 info HappyBird-ChatRoom@0.0.0 Failed to exec start script
-9 verbose stack Error: HappyBird-ChatRoom@0.0.0 start: `node ./bin/www`
-9 verbose stack Exit status 8
-9 verbose stack     at EventEmitter.<anonymous> (/usr/local/lib/node_modules/npm/lib/utils/lifecycle.js:212:16)
-9 verbose stack     at EventEmitter.emit (events.js:98:17)
-9 verbose stack     at ChildProcess.<anonymous> (/usr/local/lib/node_modules/npm/lib/utils/spawn.js:14:12)
-9 verbose stack     at ChildProcess.emit (events.js:98:17)
-9 verbose stack     at maybeClose (child_process.js:766:16)
-9 verbose stack     at Process.ChildProcess._handle.onexit (child_process.js:833:5)
-10 verbose pkgid HappyBird-ChatRoom@0.0.0
-11 verbose cwd /home/tyan/project/HappyBird-ChatRoom
-12 error Linux 3.16.7-7-desktop
-13 error argv "node" "/usr/local/bin/npm" "start"
-14 error node v0.10.35
-15 error npm  v2.1.18
-16 error code ELIFECYCLE
-17 error HappyBird-ChatRoom@0.0.0 start: `node ./bin/www`
-17 error Exit status 8
-18 error Failed at the HappyBird-ChatRoom@0.0.0 start script 'node ./bin/www'.
-18 error This is most likely a problem with the HappyBird-ChatRoom package,
-18 error not with npm itself.
-18 error Tell the author that this fails on your system:
-18 error     node ./bin/www
-18 error You can get their info via:
-18 error     npm owner ls HappyBird-ChatRoom
-18 error There is likely additional logging output above.
-19 verbose exit [ 1, true ]
+4 silly cache add args [ 'yo', null ]
+5 verbose cache add spec yo
+6 silly cache add parsed spec { raw: 'yo',
+6 silly cache add   scope: null,
+6 silly cache add   name: 'yo',
+6 silly cache add   rawSpec: '',
+6 silly cache add   spec: '*',
+6 silly cache add   type: 'range' }
+7 verbose addNamed yo@*
+8 silly addNamed semver.valid null
+9 silly addNamed semver.validRange *
+10 silly addNameRange { name: 'yo', range: '*', hasData: false }
+11 silly mapToRegistry name yo
+12 silly mapToRegistry using default registry
+13 silly mapToRegistry registry https://registry.npmjs.org/
+14 silly mapToRegistry uri https://registry.npmjs.org/yo
+15 verbose addNameRange registry:https://registry.npmjs.org/yo not in flight; fetching
+16 verbose request uri https://registry.npmjs.org/yo
+17 verbose request no auth needed
+18 info attempt registry request try #1 at 20:43:18
+19 verbose request id e39db89127754002
+20 http request GET https://registry.npmjs.org/yo
+21 http 200 https://registry.npmjs.org/yo
+22 silly get cb [ 200,
+22 silly get   { date: 'Wed, 11 Feb 2015 12:43:19 GMT',
+22 silly get     server: 'CouchDB/1.6.1 (Erlang OTP/R14B04)',
+22 silly get     etag: '"ESJGITSZL1VWQA3ZMAG5XZ1RD"',
+22 silly get     'content-type': 'application/json',
+22 silly get     'cache-control': 'max-age=60',
+22 silly get     'content-length': '28370',
+22 silly get     'accept-ranges': 'bytes',
+22 silly get     via: '1.1 varnish',
+22 silly get     age: '0',
+22 silly get     'x-served-by': 'cache-hk93-HKG',
+22 silly get     'x-cache': 'MISS',
+22 silly get     'x-cache-hits': '0',
+22 silly get     'x-timer': 'S1423658599.271513,VS0,VE164',
+22 silly get     vary: 'Accept',
+22 silly get     'keep-alive': 'timeout=10, max=50',
+22 silly get     connection: 'Keep-Alive' } ]
+23 silly addNameRange number 2 { name: 'yo', range: '*', hasData: true }
+24 silly addNameRange versions [ 'yo',
+24 silly addNameRange   [ '1.1.0',
+24 silly addNameRange     '1.1.1',
+24 silly addNameRange     '1.1.2',
+24 silly addNameRange     '1.2.0',
+24 silly addNameRange     '1.2.1',
+24 silly addNameRange     '1.3.0',
+24 silly addNameRange     '1.3.2',
+24 silly addNameRange     '1.3.3',
+24 silly addNameRange     '1.4.1',
+24 silly addNameRange     '1.4.2',
+24 silly addNameRange     '1.4.4',
+24 silly addNameRange     '1.4.5' ] ]
+25 verbose addNamed yo@1.4.5
+26 silly addNamed semver.valid 1.4.5
+27 silly addNamed semver.validRange 1.4.5
+28 silly mapToRegistry name yo
+29 silly mapToRegistry using default registry
+30 silly mapToRegistry registry https://registry.npmjs.org/
+31 silly mapToRegistry uri https://registry.npmjs.org/yo
+32 verbose addRemoteTarball https://registry.npmjs.org/yo/-/yo-1.4.5.tgz not in flight; adding
+33 verbose addRemoteTarball [ 'https://registry.npmjs.org/yo/-/yo-1.4.5.tgz',
+33 verbose addRemoteTarball   'd7b66bb9079db2412178409c9709be687435cc02' ]
+34 info retry fetch attempt 1 at 20:43:19
+35 info attempt registry request try #1 at 20:43:19
+36 http fetch GET https://registry.npmjs.org/yo/-/yo-1.4.5.tgz
+37 http fetch 200 https://registry.npmjs.org/yo/-/yo-1.4.5.tgz
+38 silly fetchAndShaCheck shasum d7b66bb9079db2412178409c9709be687435cc02
+39 verbose addTmpTarball /tmp/npm-18768-da01c8f0/registry.npmjs.org/yo/-/yo-1.4.5.tgz not in flight; adding
+40 verbose addTmpTarball already have metadata; skipping unpack for yo@1.4.5
+41 silly cache afterAdd yo@1.4.5
+42 verbose afterAdd /home/tyan/.npm/yo/1.4.5/package/package.json not in flight; writing
+43 verbose afterAdd /home/tyan/.npm/yo/1.4.5/package/package.json written
+44 silly install resolved [ { name: 'yo',
+44 silly install resolved     version: '1.4.5',
+44 silly install resolved     description: 'CLI tool for running Yeoman generators',
+44 silly install resolved     license: 'BSD',
+44 silly install resolved     bin: { yo: 'lib/cli.js' },
+44 silly install resolved     author: { name: 'Yeoman team' },
+44 silly install resolved     repository: { type: 'git', url: 'https://github.com/yeoman/yo' },
+44 silly install resolved     engines: { node: '>=0.10.0', npm: '>=2.1.0' },
+44 silly install resolved     scripts:
+44 silly install resolved      { test: 'jshint . && mocha test/**/*.js',
+44 silly install resolved        postinstall: 'yodoctor',
+44 silly install resolved        postupdate: 'yodoctor',
+44 silly install resolved        prepublish: 'nsp audit-package' },
+44 silly install resolved     files: [ 'lib' ],
+44 silly install resolved     keywords:
+44 silly install resolved      [ 'cli-app',
+44 silly install resolved        'cli',
+44 silly install resolved        'bin',
+44 silly install resolved        'front-end',
+44 silly install resolved        'development',
+44 silly install resolved        'dev',
+44 silly install resolved        'build',
+44 silly install resolved        'web',
+44 silly install resolved        'tool',
+44 silly install resolved        'scaffold',
+44 silly install resolved        'stack',
+44 silly install resolved        'yeoman',
+44 silly install resolved        'generator',
+44 silly install resolved        'generate',
+44 silly install resolved        'app',
+44 silly install resolved        'boilerplate' ],
+44 silly install resolved     dependencies:
+44 silly install resolved      { 'array-uniq': '^1.0.2',
+44 silly install resolved        async: '^0.9.0',
+44 silly install resolved        chalk: '^0.5.1',
+44 silly install resolved        configstore: '^0.3.1',
+44 silly install resolved        'cross-spawn': '^0.2.3',
+44 silly install resolved        figures: '^1.3.5',
+44 silly install resolved        findup: '^0.1.5',
+44 silly install resolved        fullname: '^1.0.0',
+44 silly install resolved        'humanize-string': '^1.0.0',
+44 silly install resolved        inquirer: '^0.8.0',
+44 silly install resolved        insight: '^0.5.0',
+44 silly install resolved        lodash: '^2.4.1',
+44 silly install resolved        meow: '^3.0.0',
+44 silly install resolved        'npm-keyword': '^1.0.1',
+44 silly install resolved        opn: '^1.0.0',
+44 silly install resolved        'package-json': '^1.0.1',
+44 silly install resolved        'root-check': '^1.0.0',
+44 silly install resolved        'sort-on': '^1.0.0',
+44 silly install resolved        'string-length': '^1.0.0',
+44 silly install resolved        titleize: '^1.0.0',
+44 silly install resolved        'update-notifier': '^0.3.0',
+44 silly install resolved        'user-home': '^1.1.0',
+44 silly install resolved        'yeoman-character': '^1.0.0',
+44 silly install resolved        'yeoman-doctor': '^1.0.0',
+44 silly install resolved        'yeoman-environment': '^1.0.1',
+44 silly install resolved        yosay: '^1.0.0' },
+44 silly install resolved     devDependencies:
+44 silly install resolved      { jshint: '^2.5.11',
+44 silly install resolved        mocha: '^2.1.0',
+44 silly install resolved        mockery: '^1.4.0',
+44 silly install resolved        nock: '^0.57.0',
+44 silly install resolved        nsp: '*',
+44 silly install resolved        proxyquire: '^1.0.1',
+44 silly install resolved        'registry-url': '^2.1.0',
+44 silly install resolved        sinon: '^1.12.1' },
+44 silly install resolved     engineStrict: true,
+44 silly install resolved     preferGlobal: true,
+44 silly install resolved     gitHead: 'c9194535c38b1a684b20a4a642190b9c293b01c1',
+44 silly install resolved     bugs: { url: 'https://github.com/yeoman/yo/issues' },
+44 silly install resolved     homepage: 'https://github.com/yeoman/yo',
+44 silly install resolved     _id: 'yo@1.4.5',
+44 silly install resolved     _shasum: 'd7b66bb9079db2412178409c9709be687435cc02',
+44 silly install resolved     _from: 'yo@*',
+44 silly install resolved     _npmVersion: '1.4.28',
+44 silly install resolved     _npmUser: { name: 'sindresorhus', email: 'sindresorhus@gmail.com' },
+44 silly install resolved     maintainers: [ [Object], [Object], [Object], [Object], [Object], [Object] ],
+44 silly install resolved     dist:
+44 silly install resolved      { shasum: 'd7b66bb9079db2412178409c9709be687435cc02',
+44 silly install resolved        tarball: 'http://registry.npmjs.org/yo/-/yo-1.4.5.tgz' },
+44 silly install resolved     directories: {},
+44 silly install resolved     _resolved: 'https://registry.npmjs.org/yo/-/yo-1.4.5.tgz' } ]
+45 info install yo@1.4.5 into /usr/local/lib
+46 info installOne yo@1.4.5
+47 verbose installOne of yo to /usr/local/lib not in flight; installing
+48 verbose lock using /home/tyan/.npm/_locks/yo-c80abb7e04f27e35.lock for /usr/local/lib/node_modules/yo
+49 silly install write writing yo 1.4.5 to /usr/local/lib/node_modules/yo
+50 silly cache addNamed cb yo@1.4.5
+51 verbose unbuild lib/node_modules/yo
+52 info preuninstall yo@1.3.3
+53 info uninstall yo@1.3.3
+54 verbose unbuild rmStuff yo@1.3.3 from /usr/local/lib/node_modules
+55 verbose gentlyRm verifying that /usr/local is managed by npm
+56 silly isManaged /usr/local is not inside /usr/local/lib/node_modules
+57 silly isManaged /usr/local is not inside /usr/local/lib/node_modules
+58 silly isManaged /usr/local/bin is inside /usr/local
+59 silly gentlyRm /usr/local is managed by npm
+60 silly gentlyRm /usr/local/bin/yo is under /usr/local
+61 verbose gentlyRm vacuuming /usr/local/bin/yo up to /usr/local
+62 silly gentlyRm removing /usr/local/bin/yo
+63 verbose unlock done using /home/tyan/.npm/_locks/yo-c80abb7e04f27e35.lock for /usr/local/lib/node_modules/yo
+64 verbose stack Error: EACCES, unlink '/usr/local/bin/yo'
+65 verbose cwd /home/tyan/project/HappyBird-ChatRoom
+66 error Linux 3.16.7-7-desktop
+67 error argv "node" "/usr/local/bin/npm" "install" "-g" "yo"
+68 error node v0.10.35
+69 error npm  v2.1.18
+70 error path /usr/local/bin/yo
+71 error code EACCES
+72 error errno 3
+73 error Error: EACCES, unlink '/usr/local/bin/yo'
+73 error  { [Error: EACCES, unlink '/usr/local/bin/yo'] errno: 3, code: 'EACCES', path: '/usr/local/bin/yo' }
+74 error Please try running this command again as root/Administrator.
+75 verbose exit [ 3, true ]
+76 verbose unbuild lib/node_modules/yo
+77 info preuninstall yo@1.3.3
+78 info uninstall yo@1.3.3
+79 verbose unbuild rmStuff yo@1.3.3 from /usr/local/lib/node_modules
+80 verbose gentlyRm verifying that /usr/local is managed by npm
+81 silly isManaged /usr/local is not inside /usr/local/lib/node_modules
+82 silly isManaged /usr/local is not inside /usr/local/lib/node_modules
+83 silly isManaged /usr/local is not inside /usr/local/bin
+84 silly isManaged /usr/local is inside /usr/local
+85 silly gentlyRm /usr/local is managed by npm
+86 silly gentlyRm /usr/local/bin/yo is under /usr/local
+87 verbose gentlyRm vacuuming /usr/local/bin/yo up to /usr/local
+88 silly gentlyRm removing /usr/local/bin/yo
+89 error error rolling back Error: EACCES, unlink '/usr/local/bin/yo'
+89 error error rolling back  { [Error: EACCES, unlink '/usr/local/bin/yo'] errno: 3, code: 'EACCES', path: '/usr/local/bin/yo' }

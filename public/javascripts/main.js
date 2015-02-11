@@ -255,7 +255,6 @@
 
         eventObject.preventDefault();
         if ($('#message_text').val() != "") {
-            alert('fuck');
             socket.emit('newMessage', {'room':getCurrentRoom(), 'msg':getMessageText()});
         }
     });
@@ -282,6 +281,7 @@
 
     // Set nickname
     $('#b_set_nickname').click(function(eventObject) {
+        $('#modal_setnick').modal();
         eventObject.preventDefault();
         socket.emit('setNickname', {'username':getNickname()});
 
