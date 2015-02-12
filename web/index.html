@@ -1,0 +1,176 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <title>front</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css(.tmp) styles/main.css -->
+
+    <link rel="stylesheet" href="components/foundation/css/foundation.css">
+    <link rel="stylesheet" href="components/foundation-icons/foundation-icons.css">
+    <link rel="stylesheet" href="components/foundation/css/normalize.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+    <!-- build:js scripts/vendor/modernizr.js -->
+    <script src="components/modernizr/modernizr.js"></script>
+    <!-- endbuild -->
+
+  </head>
+  <body>
+    <!--[if lt IE 10]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+
+    <nav class="top-bar" data-topbar role="navigation">
+      <ul class="title-area">
+        <li class="name"><h1><a href="#">My Site</a></h1></li>
+        <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+        <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+      </ul>
+      <section class="top-bar-section"> <!-- Right Nav Section -->
+        <ul class="right">
+          <li class="active"><a href="#">Right Button Active</a></li>
+          <li class="has-dropdown"><a href="#">Right Button Dropdown</a>
+            <ul class="dropdown">
+              <li><a href="#">First link in dropdown</a></li>
+              <li class="active"><a href="#">Active link in dropdown</a></li>
+            </ul>
+          </li>
+        </ul>
+        <!-- Left Nav Section -->
+        <ul class="left">
+          <li><a href="#">Left Nav Button</a></li>
+        </ul>
+      </section>
+    </nav>
+
+    <section role="main" class="scroll-container">
+      <div class="row MyMain">
+
+        <div class="large-3 columns">
+          <div class="sidebar">
+            <a href="#" class="button info" style="width: 100%">Anonymous</a>
+
+
+            <ul class="side-nav">
+              <li><a href="#">Link 1</a></li>
+              <li><a href="#">Link 2</a></li>
+              <li><a href="#">Link 3</a></li>
+              <li><a href="#">Link 4</a></li>
+            </ul>
+
+
+          </div>
+        </div>
+
+        <br/>
+        <div class="large-9 columns panel">
+          <div class="row">
+
+            <div class="chatNav large-12 columns">
+              <ul class="pagination nav-left">
+                <li class="arrow"><a href="">&laquo;</a></li>
+              </ul>
+              <ul class="pagination nav-left" id="room_tab">
+                <li class=""><a href="">
+                  Main
+                  <i class="fi-x"></i>
+                </a></li>
+                <li class="current"><a href="">
+                  Main
+                  <i class="fi-x"></i>
+                </a></li>
+              </ul>
+              <ul class="pagination nav-right">
+                <li class="arrow"><a href="">&raquo;</a></li>
+              </ul>
+            </div>
+
+            <div class="All-Chat large-12 columns">
+              <div class="panel room">
+                <div class="row" >
+                  <div class="small-2 columns">
+                    <span class="radius label">Advanced Label:</span>
+                  </div>
+
+                  <div class="small-10 columns">
+                    <p class="msg">fufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufufu</p>
+                  </div>
+
+                  <div class="chat_content_group buddy  " _sender_uin="1762900396">
+
+                    <img class="chat_content_avatar" src="" alt="src" height="40px" width="40px">
+
+                    <p class="chat_nick">我忏悔</p>
+
+
+                    <p class="chat_content ">[自定义表情自定义表情自定义表情自定义表情自定义表情自定义表情自定义表情自定义表情自定义表情自定义表情自定义表情自定义表情自定义表情自定义表情自定义表情自定义表情自定义表情自定义表情] </p>
+                  </div>
+
+                  <div class="chat_content_group self  " _sender_uin="86464875">
+
+                    <img class="chat_content_avatar" src="http://face5.web.qq.com/cgi/svr/face/getface?cache=1&amp;type=1&amp;f=40&amp;uin=86464875&amp;t=1423751172&amp;vfwebqq=f8fc309880ae81e1e3d3f4d8ea3bedcbb9676a3e331b4cc1608002ff92f2f3e8da7d891b7f3c6c2e" height="40px" width="40px">
+
+                    <p class="chat_nick">太安</p>
+
+
+                    <p class="chat_content ">hi</p>
+                  </div>
+
+                </div>
+                <span class="radius label">Advanced Label:</span><br>
+                <span class="radius label">Advanced Label:</span><br>
+                <span class="radius label">Advanced Label:</span><br>
+                <span class="radius label">Advanced Label:</span><br>
+                <span class="radius label">Advanced Label:</span><br>
+
+
+              </div>
+
+
+            </div>
+
+            <div>
+              <input type="button" id="test1"/>
+
+              <div class="large-10 columns">
+                <input type="text" placeholder="say something"/>
+              </div>
+              <div class="large-2 columns">
+                <a class="button small tiny round" id="send">Send</a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- build:js(.) scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="components/jquery/dist/jquery.js"></script>
+    <script src="components/foundation/js/foundation.min.js"></script>
+    <script src="components/handlebars/handlebars.min.js"></script>
+    <script src="components/underscore/underscore-min.js"></script>
+    <script src="components/socket.io-client/socket.io.js"></script>
+    <script src="components/ejs/ejs.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+
+
+        <!-- build:js({app,.tmp}) scripts/main.js -->
+        <script src="scripts/temp.js"></script>
+        <script src="scripts/test.js"></script>
+        <!-- endbuild -->
+</body>
+</html>
