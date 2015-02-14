@@ -49,9 +49,7 @@ var helper = (function(){
         $new_msg.children('.chat_nick').text(Message.username);
         $new_msg.children('.chat_content').text(Message.content);
         $('#' + RoomName).append($new_msg);
-        $('#' + RoomName).animate({
-            scrollTop: $('#' + RoomName).height()
-        }, 300);
+        helper.room_scroll_bottom(RoomName);
     };
 
     helper.add_message_self = function (RoomName, Message) {
@@ -60,9 +58,20 @@ var helper = (function(){
         $new_msg.children('.chat_nick').text(Message.username);
         $new_msg.children('.chat_content').text(Message.content);
         $('#' + RoomName).append($new_msg);
-        $('#' + RoomName).animate({
-            scrollTop: $('#' + RoomName).height()
-        }, 300);
+        helper.room_scroll_bottom(RoomName);
+    };
+
+    helper.add_sys_message = function (RoomName, MessageStr) {
+      var $sys_message = $(TEMP.sys_message);
+      $sys_message.text(MessageStr);
+      $('#' + RoomName).append($sys_message);
+      helper.room_scroll_bottom(RoomName);
+    };
+
+    helper.room_scroll_bottom = function (RoomName) {
+      $('#' + RoomName).animate({
+          scrollTop: $('#' + RoomName).height()
+      }, 300);
     };
 
 
