@@ -1,53 +1,7 @@
-console.log('\'Allo \'Allo!');
 
-//$(function(){
-//  var nav_total = 239;
-//  var nav_visible_first = 1;
-//  var nav_visible_last = 1;
-//
-//  $('.tab-title').click(function(e){
-//    $('.tab-title').removeClass('active');
-//    $(this).addClass('active');
-//  });
-//
-//  $('#fuck').click(function(e){
-//    $('.message-window').append('<span class="radius label">Advanced Label:</span><br>');
-//    $('.message-window').animate({
-//      scrollTop: $('.message-window').height()
-//    }, 300);
-//  });
-//
-//  $('#fuck2').click(function(e){
-//    var $new_nav = $('<li class="current"><a href="">Main</a></li>');
-//    $new_nav.hide();
-//    $('#msg_wins').append($new_nav);
-//   // $new_nav.prepend('Fuck');
-//    nav_total -= $new_nav.width();
-//    $new_nav.show();
-//    alert($new_nav.width());
-//    ////var ssx= $('.rooms :visible :first-child');
-//    ////alert(ssx.text());
-//    //nav_visible_last++;
-//    //if(nav_total > 797){
-//    //  $('.rooms').children(':eq(nav_visible_first)').hide();
-//    //  nav_visible_first++;
-//    //  $new_nav.show();
-//    //} else {
-//    //  $('.rooms').append($new_nav);
-//    //  $new_nav.show();
-//    //}
-//
-//  });
-//
-//  $('#send').click(function(e){
-//    $('.message-window').append('<div style="float:right;">sadsads<span class="radius label" >Advanced Label:</span></div><br>');
-//    $('.message-window').animate({
-//      scrollTop: $('.message-window').height()
-//    }, 300);
-//  });
-//
-//});
 (function($){
+  alert($.name);
+
   var debug = false;
 
   // ***************************************************************************

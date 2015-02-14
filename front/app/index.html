@@ -12,10 +12,11 @@
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
-    <link rel="stylesheet" href="styles/main.css">
+
     <link rel="stylesheet" href="bower_components/foundation/css/foundation.css">
     <link rel="stylesheet" href="bower_components/foundation-icons/foundation-icons.css">
     <link rel="stylesheet" href="bower_components/foundation/css/normalize.css">
+    <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
     <!-- build:js scripts/vendor/modernizr.js -->
     <script src="bower_components/modernizr/modernizr.js"></script>
@@ -72,31 +73,50 @@
 
         <br/>
         <div class="large-9 columns panel">
-          <div class="chatNav large-12 columns">
-              <a href="#" class="button small chat-name" style="width: 1em">
-                <i class="fi-arrow-left"></i>
-              </a>
-              <a href="#" class="button small chat-name">Button 3</a>
-              <a href="#" class="button small chat-name">Button 3</a>
-              <a href="#" class="button small chat-name">Button 3</a>
-              <a href="#" class="button small chat-name">Button 3</a>
-          </div>
+          <div class="row">
 
-          <div class="All-Chat large-12 columns">
-            <div class="panel message-window"><h5>This is a regular panel.</h5>
-
-              <p>It has an easy to override visual style, and is appropriately subdued.</p></div>
-          </div>
-
-          <div>
-            <div class="large-10 columns">
-              <input type="text" placeholder="large-12.columns"/>
+            <div class="chatNav large-12 columns">
+              <ul class="pagination nav-left">
+                <li class="arrow"><a href="">&laquo;</a></li>
+              </ul>
+              <ul class="pagination nav-left" id="msg_wins">
+                <li class=""><a href="">
+                  Main
+                  <i class="fi-x"></i>
+                </a></li>
+                <li class="current"><a href="">
+                  Main
+                  <i class="fi-x"></i>
+                </a></li>
+              </ul>
+              <ul class="pagination nav-right">
+                <li class="arrow"><a href="">&raquo;</a></li>
+              </ul>
             </div>
-            <div class="large-2 columns">
-              <a href="#" class="button tiny round">Send</a>
-            </div>
-          </div>
 
+            <div class="All-Chat large-12 columns">
+              <div class="panel message-window">
+                <span class="radius label">Advanced Label:</span><br>
+                <span class="radius label">Advanced Label:</span><br>
+                <span class="radius label">Advanced Label:</span><br>
+                <span class="radius label">Advanced Label:</span><br>
+                <span class="radius label">Advanced Label:</span><br>
+                <span class="radius label">Advanced Label:</span><br>
+
+
+              </div>
+            </div>
+
+            <div>
+              <div class="large-10 columns">
+                <input type="text" placeholder="say something"/>
+              </div>
+              <div class="large-2 columns">
+                <a class="button small tiny round" id="send">Send</a>
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
     </section>
@@ -104,6 +124,7 @@
 
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <!-- endbower -->
     <!-- endbuild -->

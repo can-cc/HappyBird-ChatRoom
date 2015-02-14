@@ -41,6 +41,10 @@
   overflow-y: auto;
 }
 
+.room_tab {
+  
+}
+
 
 .msg{
   display: inline-block;
