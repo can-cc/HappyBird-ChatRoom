@@ -5,7 +5,10 @@ var db = require('../db');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.redirect('/reg');
+  if (req.session.user) res.render('index', {
+    title: 'index'
+  });
+  else res.redirect('/login.html');
 });
 
 router.post('/reg', function(req, res, next) {
@@ -25,13 +28,22 @@ router.post('/login', function(req, res, next) {
     correct) {
     if (correct) {
       req.session.user = db.User.get(req.body.username, function(user) {
-        //req.session.user = user;
-        res.send('login success!')
+        req.session.user = user;
+        res.send({
+          success: 'login success!'
+        });
       });
     } else {
-      res.send('username or password error!')
+      res.send({
+        error: 'username or password error!'
+      });
     }
   });
+});
+
+router.post('/logout', function(req, res, next) {
+  req.session.user = null;
+  res.redirect('/login.html');
 });
 
 

@@ -1,4 +1,5 @@
 var express = require('express');
+var session = require('express-session');
 var path = require('path');
 var http = require('http');
 var favicon = require('serve-favicon');
@@ -8,6 +9,7 @@ var bodyParser = require('body-parser');
 var setting = require('./setting')
 var chatsocket = require('./chatsocket')
 var debug = require('debug')('HappyBird-ChatRoom:server');
+var RedisStore = require('connect-redis')(session);
 
 
 var routes = require('./routes/index');
@@ -19,8 +21,7 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(favicon(__dirname + '/web/images/favicon.jpg'));
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -28,15 +29,17 @@ app.use(bodyParser.urlencoded({
   extended: false
 }));
 app.use(cookieParser());
-//app.use(require('stylus').middleware(path.join(__dirname, 'public')));
+
+app.use(session({
+  store: new RedisStore(),
+  secret: 'happy bird'
+}));
 
 
 app.use('/', routes);
 // app.use('/reg', users);
 
 
-// catch 404 and forward to error handler
-// error handlers
 app.use(express.static(path.join(__dirname, './web')));
 
 
@@ -59,15 +62,21 @@ if (app.get('env') === 'development') {
   });
 }
 
-// production error handler
-// no stacktraces leaked to user
-//app.use(function(err, req, res, next) {
-//    res.status(err.status || 500);
-//    res.render('error', {
-//        message: err.message,
-//        error: {}
-//    });
-//});
+//production error handler
+//no stacktraces leaked to user
+app.use(function(err, req, res, next) {
+  res.status(err.status || 500);
+  res.render('error', {
+    message: err.message,
+    error: {}
+  });
+});
+
+
+//run
+// *****************************************************************************
+// *****************************************************************************
+// *****************************************************************************
 
 
 
