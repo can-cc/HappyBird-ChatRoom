@@ -19,7 +19,8 @@ router.post('/', function(req, res, next) {
       res.send('reg success!');
     }
   });
-
 });
+
+router.post('/')
 
 module.exports = router;

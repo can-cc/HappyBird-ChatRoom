@@ -25,9 +25,8 @@ User.prototype.save = function(callback) {
     err && callback(err);
     bcrypt.hash(password, salt, function(err, hash) {
       // Store
-      modelsDB.hmset('HC_User', username, {
-          'password': hash
-        },
+      modelsDB.hmset('HC_User:' + username,
+        'password', hash,
         redis.print);
 
     });
@@ -36,21 +35,26 @@ User.prototype.save = function(callback) {
 
 User.prototype.checkExist = function(callback) {
   var username = this.username;
-  modelsDB.hget(['HC_User', username], function(err, username) {
-    if (username) callback(true)
+  modelsDB.hgetall('HC_User:' + username, function(err, reply) {
+    if (reply) callback(true)
     else callback(false)
   });
 };
 
 User.checkPasswd = function(username, password, callback) {
-  modelsDB.hget(['HC_User', username], function(err, reply) {
-    if (reply.password == password) callback(true)
-    else callback(false)
+  modelsDB.hget('HC_User:' + username, 'password', function(err, reply) {
+    console.log(reply);
+    // Load hash from your password DB.
+    bcrypt.compare(password, reply, function(err, res) {
+      callback(res);
+    });
+
+
   });
 };
 
 User.get = function(username, callback) {
-  modelsDB.hget(['HC_User', username], function(err, reply) {
+  modelsDB.hgetall('HC_User:' + username, function(err, reply) {
     callback(reply);
   });
 };
