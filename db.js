@@ -7,16 +7,17 @@ var bcrypt = require('bcrypt');
 
 exports.pub = redis.createClient(setting.redisPort, setting.dbHost, setting.dbOptions);
 exports.sub = redis.createClient(setting.redisPort, setting.dbHost, setting.dbOptions);
-exports.dbClient = redis.createClient(setting.redisPort, setting.dbHost, setting.dbOptions);
+exports.dbClient = redis.createClient(setting.redisPort, setting.dbHost,
+  setting.dbOptions);
 
 var modelsDB = redis.createClient(setting.redisPort, setting.dbHost, setting.dbOptions);
 
 var User = function(username, password) {
-	this.username = username;
-	this.password = password;
+  this.username = username;
+  this.password = password;
 };
 
-User.prototype.save = function save(callback) {
+User.prototype.save = function(callback) {
   var username = this.username;
   var password = this.password;
 
@@ -24,20 +25,34 @@ User.prototype.save = function save(callback) {
     err && callback(err);
     bcrypt.hash(password, salt, function(err, hash) {
       // Store
-      modelsDB.hmset('User', 'username', username,
-        'password', password,
+      modelsDB.hmset('HC_User', username, {
+          'password': hash
+        },
         redis.print);
 
     });
   });
 };
 
-User.prototype.checkExist = function checkExist(callback) {
-	var username = this.username;
-	modelsDB.hget(['User', 'username'], function(err, username) {
-		if(username) callback(true)
-		else callback(false)
-	});
+User.prototype.checkExist = function(callback) {
+  var username = this.username;
+  modelsDB.hget(['HC_User', username], function(err, username) {
+    if (username) callback(true)
+    else callback(false)
+  });
+};
+
+User.checkPasswd = function(username, password, callback) {
+  modelsDB.hget(['HC_User', username], function(err, reply) {
+    if (reply.password == password) callback(true)
+    else callback(false)
+  });
+};
+
+User.get = function(username, callback) {
+  modelsDB.hget(['HC_User', username], function(err, reply) {
+    callback(reply);
+  });
 };
 
 exports.User = User;
