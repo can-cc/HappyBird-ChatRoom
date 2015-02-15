@@ -15,4 +15,9 @@
       $new_msg.children('.chat_content').text(data.content);
       $('#Main').append($new_msg);
   });
+
+  $('#send').click(function(event){
+    var content = $('message_input').val();
+  });
+
 }());

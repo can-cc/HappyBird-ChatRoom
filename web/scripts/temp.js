@@ -16,5 +16,7 @@ var TEMP = (function () {
                         '<p class="chat_content "></p>' +
                         '</div>';
 
+    temp.sys_message = '<span class="info label"></span>';
+
     return temp;
 }());

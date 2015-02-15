@@ -29,14 +29,14 @@
 
     // Disconnected from server
     socket.on('disconnect', function (data) {
-        var info = {'room':'MainRoom', 'username':'ServerBot', 'msg':'----- Lost connection to server -----'};
-        helper.addMessage(info);
+        helper.add_sys_message(data.room,
+              '---------- Lost connection to server ----------'),
     });
 
     // Reconnected to server
     socket.on('reconnect', function (data) {
-        var info = {'room':'MainRoom', 'username':'ServerBot', 'msg':'----- Reconnected to server -----'};
-        helper.addMessage(info);
+      helper.add_sys_message(data.room,
+            '---------- Reconnected to server ----------'),
     });
 
     // Subscription to room confirmed
@@ -64,26 +64,22 @@
     socket.on('userJoinsRoom', function(data) {
         console.log("userJoinsRoom: %s", JSON.stringify(data));
         // Log join in conversation
-        helper.addMessage(data);
-
-        // Add user to connected users list
-        //addUser(data);
+        helper.add_sys_message(data.room,
+                        '----------' + data.username + ' join room! ----------');
     });
 
     // User leaves room
     socket.on('userLeavesRoom', function(data) {
         console.log("userLeavesRoom: %s", JSON.stringify(data));
         // Log leave in conversation
-        helper.addMessage(data);
-
-        // Remove user from connected users list
-        //removeUser(data);
+        helper.add_sys_message(data.room,
+                        '----------' + data.username + ' leave room! ----------');
     });
 
     // Message received
     socket.on('newMessage', function (data) {
         console.log("newMessage: %s", JSON.stringify(data));
-        helper.addMessage(data);
+        helper.add_message(data);
 
     });
 
