@@ -7,8 +7,7 @@ var bcrypt = require('bcrypt');
 
 exports.pub = redis.createClient(setting.redisPort, setting.dbHost, setting.dbOptions);
 exports.sub = redis.createClient(setting.redisPort, setting.dbHost, setting.dbOptions);
-exports.dbClient = redis.createClient(setting.redisPort, setting.dbHost,
-	setting.dbOptions);
+exports.dbClient = redis.createClient(setting.redisPort, setting.dbHost, setting.dbOptions);
 
 var modelsDB = redis.createClient(setting.redisPort, setting.dbHost, setting.dbOptions);
 
@@ -18,25 +17,27 @@ var User = function(username, password) {
 };
 
 User.prototype.save = function save(callback) {
-	var username = this.username;
-	var password = this.password;
+  var username = this.username;
+  var password = this.password;
 
-	bcrypt.genSalt(10, function(err, salt) {
-		err && callback(err);
-		bcrypt.hash(password, salt, function(err, hash) {
-			// Store
-			modelsDB.hmset('User', 'username', username,
-				'password', password,
-				redis.print);
+  bcrypt.genSalt(10, function(err, salt) {
+    err && callback(err);
+    bcrypt.hash(password, salt, function(err, hash) {
+      // Store
+      modelsDB.hmset('User', 'username', username,
+        'password', password,
+        redis.print);
 
-		});
-	});
+    });
+  });
 };
 
 User.prototype.checkExist = function checkExist(callback) {
 	var username = this.username;
 	modelsDB.hget(['User', 'username'], function(err, username) {
-		err && callback(err);
-		if
+		if(username) callback(true)
+		else callback(false)
 	});
 };
+
+exports.User = User;
