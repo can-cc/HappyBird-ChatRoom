@@ -42,7 +42,7 @@
 }
 
 .room_tab {
-  
+
 }
 
 
@@ -63,7 +63,7 @@
  }
 
  .chat_content_group {
-   padding: 10px;
+   padding: -10px;
  }
 
 
@@ -71,24 +71,24 @@
    float: left;
    width: 40px;
    height: 40px;
-   margin-right: 10px;
+   margin-right: 5px;
  }
 
  .chat_nick {
    font-size: 14px;
-   margin: 0px 0px 10px;
+   margin: 0px 0px 0px;
  }
 
  .chat_content {
    display: inline-block;
    min-height: 16px;
    max-width: 50%;
-   background: linear-gradient(#CF9, #9C3) repeat scroll 0% 0% transparent;
+   background: linear-gradient(#8ecdd3, #5493e7) repeat scroll 0% 0% transparent;
    border-radius: 5px;
-   padding: 10px 15px;
+   padding: 5px 7px;
    word-break: break-all;
-   box-shadow: 1px 1px 5px #000;
-   line-height: 1.4;
+   box-shadow: 1px 1px 3px #000;
+   line-height: 1;
  }
 
  .chat_content_group.self {
@@ -97,5 +97,5 @@
 
  .chat_content_group.self > .chat_content_avatar {
    float: right;
-   margin: 0px 0px 0px 10px;
+   margin: 0px 0px 0px 0px;
  }

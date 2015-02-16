@@ -1,8 +1,8 @@
 /**
  * Created by tyan on 15-2-13.
  */
+ var socket = io.connect('http://localhost:8888');
 (function(){
-    var socket = io.connect('http://localhost:8888');
     var debug = false;
 
     // Connection established
@@ -29,14 +29,12 @@
 
     // Disconnected from server
     socket.on('disconnect', function (data) {
-        helper.add_sys_message(data.room,
-              '---------- Lost connection to server ----------'),
+        helper.add_sys_message(data.room, '---------- Lost connection to server ----------');
     });
 
     // Reconnected to server
     socket.on('reconnect', function (data) {
-      helper.add_sys_message(data.room,
-            '---------- Reconnected to server ----------'),
+      helper.add_sys_message(data.room, '---------- Reconnected to server ----------');
     });
 
     // Subscription to room confirmed
@@ -78,9 +76,9 @@
 
     // Message received
     socket.on('newMessage', function (data) {
+        console.log('hi , i re it!');
         console.log("newMessage: %s", JSON.stringify(data));
         helper.add_message(data);
-
     });
 
     // Users in room received

@@ -8,7 +8,7 @@ setting = {
     redisPort: 6379,
     dbHost: '127.0.0.1',
     dbOptions: {},
-    mainroom: 'MainRoom'
+    mainroom: 'Main'
 };
 
 module.exports = setting;

@@ -43,20 +43,20 @@ var helper = (function(){
         $('#' + RoomName + '_tab').addClass('current');
     };
 
-    helper.add_message = function (RoomName, Message) {
+    helper.add_message = function (Message) {
         var $new_msg = $(TEMP.message);
-        $new_msg.children('img').attr('src', Message.poritrait);
+        $new_msg.children('img').attr('src', Message.poritrait || '');
         $new_msg.children('.chat_nick').text(Message.username);
-        $new_msg.children('.chat_content').text(Message.content);
-        $('#' + RoomName).append($new_msg);
-        helper.room_scroll_bottom(RoomName);
+        $new_msg.children('.chat_content').text(Message.msg);
+        $('#' + Message.room).append($new_msg);
+        helper.room_scroll_bottom(Message.room);
     };
 
     helper.add_message_self = function (RoomName, Message) {
         var $new_msg = $(TEMP.message_self);
         $new_msg.children('img').attr('src', Message.poritrait);
         $new_msg.children('.chat_nick').text(Message.username);
-        $new_msg.children('.chat_content').text(Message.content);
+        $new_msg.children('.chat_content').text(Message.msg);
         $('#' + RoomName).append($new_msg);
         helper.room_scroll_bottom(RoomName);
     };

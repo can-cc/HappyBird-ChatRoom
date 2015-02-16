@@ -5,20 +5,28 @@ var db = require('../db');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+  var user_str = JSON.stringify({
+          passwd: 'fuck',
+          fuck: 'dick'
+        });
   if (req.session.user) res.render('index', {
-    title: 'index'
+    user: user_str
   });
   else res.redirect('/login.html');
+});
+
+router.get('/reg', function(req, res, next) {
+  res.redirect('/reg.html');
 });
 
 router.post('/reg', function(req, res, next) {
   user = new db.User(req.body.username, req.body.password);
   user.checkExist(function(exist) {
     if (exist) {
-      res.send('username already exist!!!!');
+      res.send({error: 'username already exist!'});
     } else {
       user.save();
-      res.send('reg success!');
+      res.send({success: 'register success!'});
     }
   });
 });
@@ -29,21 +37,18 @@ router.post('/login', function(req, res, next) {
     if (correct) {
       req.session.user = db.User.get(req.body.username, function(user) {
         req.session.user = user;
-        res.send({
-          success: 'login success!'
-        });
+        res.send({success: 'login success!'});
       });
     } else {
-      res.send({
-        error: 'username or password error!'
-      });
+      res.send({error: 'username or password error!'});
     }
   });
 });
 
 router.post('/logout', function(req, res, next) {
-  req.session.user = null;
-  res.redirect('/login.html');
+  req.session.destroy(function(){
+    res.redirect('/login.html');
+  });
 });
 
 

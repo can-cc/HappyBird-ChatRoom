@@ -19,6 +19,8 @@ io.adapter( ioredis({
     redisClient: db.dbClient
 }));
 
+
+
 io.sockets.on('connection', function(socket) {
 
     // Welcome message on connection
@@ -90,24 +92,24 @@ io.sockets.on('connection', function(socket) {
 
     // Get users in given room
     socket.on('getUsersInRoom', function(data) {
-        console.log('hi im getUsersInRoom');
-        var usersInRoom = [];
-        //socket.join(data.room);
-        var socketsInRoom = io.sockets.adapter.rooms[data.room];
-
-        console.log(io.sockets.adapter.rooms);
-        console.log(socketsInRoom);
-        console.log(data.room);
-        console.log(typeof (socketsInRoom.length));
-        for (var i=0; i<socketsInRoom.length; i++) {
-            db.dbClient.hgetall(socketsInRoom[i].id, function(err, obj) {
-                usersInRoom.push({'room':data.room, 'username':obj.username, 'id':obj.socketID});
-                // When we've finished with the last one, notify user
-                if (usersInRoom.length == socketsInRoom.length) {
-                    socket.emit('usersInRoom', {'users':usersInRoom});
-                }
-            });
-        }
+        // console.log('hi im getUsersInRoom');
+        // var usersInRoom = [];
+        // //socket.join(data.room);
+        // var socketsInRoom = io.sockets.adapter.rooms[data.room];
+        //
+        // console.log(io.sockets.adapter.rooms);
+        // console.log(socketsInRoom);
+        // console.log(data.room);
+        // console.log(typeof (socketsInRoom.length));
+        // for (var i=0; i<socketsInRoom.length; i++) {
+        //     db.dbClient.hgetall(socketsInRoom[i].id, function(err, obj) {
+        //         usersInRoom.push({'room':data.room, 'username':obj.username, 'id':obj.socketID});
+        //         // When we've finished with the last one, notify user
+        //         if (usersInRoom.length == socketsInRoom.length) {
+        //             socket.emit('usersInRoom', {'users':usersInRoom});
+        //         }
+        //     });
+        // }
     });
 
     // User wants to change his nickname
@@ -174,6 +176,7 @@ io.sockets.on('connection', function(socket) {
 
         // Delete user from db
         db.dbClient.del(socket.id, redis.print);
+        console.log('i del it!')
     });
 });
 
