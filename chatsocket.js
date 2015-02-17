@@ -3,6 +3,7 @@
  */
 
 var app = require('./app');
+var cookieParser = require('cookie-parser');
 var logger = require('./logger');
 var io = require('socket.io')();
 var ioredis = require('socket.io-redis');
@@ -12,6 +13,7 @@ var setting = require('./setting');
 var db = require('./db');
 var _ = require('underscore');
 var helper = require('./routes/helper');
+var signature = require('cookie-signature');
 
 io.adapter( ioredis({
     redisPub: db.pub,
@@ -19,7 +21,34 @@ io.adapter( ioredis({
     redisClient: db.dbClient
 }));
 
+io.set('authorization', function (handshakeData, callback) {
+    if (!handshakeData.headers.cookie)
+        return callback('No cookie transmitted.', false);
 
+    var cookies = handshakeData.headers.cookie.split('; ');
+    console.log(handshakeData.headers.cookie);
+    console.log(cookies);
+    var sessionid;
+    for(var i=0; i<cookies.length; i++) {
+        console.log(cookies[i]);
+        if(cookies[i].indexOf('esid') != -1){
+            sessionid = cookies[i].split('=')[1];
+            break;
+        }
+    }
+    console.log(sessionid);
+    var unsignedsid = signature.unsign(encodeURI(sessionid).slice(3), '');
+    console.log(unsignedsid);
+    unsignedsid = encodeURI(sessionid).slice(6, sessionid.indexOf('.')+2) ;
+    console.log(unsignedsid);
+
+    db.sessionStore.get(unsignedsid, function(err, session){
+        if(err) callback('Get session error.', false);
+        handshakeData.session = session;
+        console.log(JSON.stringify(session));
+        return callback(null, true);
+    });
+});
 
 io.sockets.on('connection', function(socket) {
 
@@ -145,10 +174,10 @@ io.sockets.on('connection', function(socket) {
 
             // Check if user is subscribed to room before sending his message
             //if (_.has(io.sockets.adapter.rooms[socket.id], "/"+data.room)) {
-                var message = {'room':data.room, 'username':obj.username, 'msg':data.msg, 'date':new Date()};
-                // Send message to room
-                io.sockets.in(data.room).emit('newMessage', message);
-                logger.emit('newEvent', 'newMessage', message);
+            var message = {'room':data.room, 'username':obj.username, 'msg':data.msg, 'date':new Date()};
+            // Send message to room
+            io.sockets.in(data.room).emit('newMessage', message);
+            logger.emit('newEvent', 'newMessage', message);
             //}
         });
     });

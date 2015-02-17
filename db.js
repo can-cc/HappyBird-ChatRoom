@@ -4,6 +4,11 @@
 var redis = require('redis');
 var setting = require('./setting');
 var bcrypt = require('bcrypt');
+var session = require('express-session');
+var RedisStore = require('connect-redis')(session);
+
+
+exports.sessionStore = new RedisStore();
 
 exports.pub = redis.createClient(setting.redisPort, setting.dbHost, setting.dbOptions);
 exports.sub = redis.createClient(setting.redisPort, setting.dbHost, setting.dbOptions);

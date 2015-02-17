@@ -9,7 +9,7 @@ var bodyParser = require('body-parser');
 var setting = require('./setting')
 var chatsocket = require('./chatsocket')
 var debug = require('debug')('HappyBird-ChatRoom:server');
-var RedisStore = require('connect-redis')(session);
+var db = require('./db');
 
 
 var routes = require('./routes/index');
@@ -31,8 +31,9 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 
 app.use(session({
-  store: new RedisStore(),
-  secret: 'happy bird'
+  store: db.sessionStore,
+  secret: 'happy bird',
+  key: 'esid'
 }));
 
 
