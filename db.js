@@ -32,6 +32,7 @@ User.prototype.save = function(callback) {
 			// Store
 			modelsDB.hmset('HC_User:' + username,
 				'password', hash,
+                'username', username,
 				redis.print);
 
 		});

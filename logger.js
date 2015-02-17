@@ -4,7 +4,7 @@
 var events = require('events');
 
 var logger = new events.EventEmitter();
-logger.on('newEvent', function(event, data) {
+logger.on('logging', function(event, data) {
     // Console log
     console.log('%s: %s', event, JSON.stringify(data));
     // Persistent log storage too?

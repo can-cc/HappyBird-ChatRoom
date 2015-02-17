@@ -36,16 +36,11 @@ io.set('authorization', function (handshakeData, callback) {
             break;
         }
     }
-    console.log(sessionid);
-    var unsignedsid = signature.unsign(encodeURI(sessionid).slice(3), '');
-    console.log(unsignedsid);
-    unsignedsid = encodeURI(sessionid).slice(6, sessionid.indexOf('.')+2) ;
-    console.log(unsignedsid);
-
-    db.sessionStore.get(unsignedsid, function(err, session){
+    var sid = encodeURI(sessionid).slice(6, sessionid.indexOf('.')+2) ;
+    db.sessionStore.get(sid, function(err, session){
         if(err) callback('Get session error.', false);
         handshakeData.session = session;
-        console.log(JSON.stringify(session));
+        logger.emit('logging', 'user-socket-auth-success', JSON.stringify(session));
         return callback(null, true);
     });
 });
@@ -54,16 +49,16 @@ io.sockets.on('connection', function(socket) {
 
     // Welcome message on connection
     socket.emit('connected', 'Welcome to the chat server');
-    logger.emit('newEvent', 'userConnected', {'socket':socket.id});
+    logger.emit('logging', 'userConnected', {'socket':socket.id});
 
     // Store user data in db
-    db.dbClient.hset([socket.id, 'connectionDate', new Date()], redis.print);
-    db.dbClient.hset([socket.id, 'socketID', socket.id], redis.print);
-    db.dbClient.hset([socket.id, 'username', 'anonymous'], redis.print);
+    db.dbClient.hset(['SocketID:' + socket.id, 'connectionDate', new Date()], redis.print);
+    db.dbClient.hset(['SocketID:' + socket.id, 'socketID', socket.id], redis.print);
+    db.dbClient.hset(['SocketID:' + socket.id, 'username', 'anonymous'], redis.print);
 
     // Join user to 'MainRoom'
     socket.join(setting.mainroom);
-    logger.emit('newEvent', 'userJoinsRoom', {'socket':socket.id, 'room':setting.mainroom});
+    logger.emit('logging', 'userJoinsRoom', {'socket':socket.id, 'room':setting.mainroom});
     // Confirm subscription to user
     socket.emit('subscriptionConfirmed', {'room':setting.mainroom});
     // Notify subscription to all users in room
@@ -79,7 +74,7 @@ io.sockets.on('connection', function(socket) {
             _.each(data.rooms, function(room) {
                 room = room.replace(" ","");
                 socket.join(room);
-                logger.emit('newEvent', 'userJoinsRoom', {'socket':socket.id, 'username':username, 'room':room});
+                logger.emit('logging', 'userJoinsRoom', {'socket':socket.id, 'username':username, 'room':room});
 
                 // Confirm subscription to user
                 socket.emit('subscriptionConfirmed', {'room': room});
@@ -100,7 +95,7 @@ io.sockets.on('connection', function(socket) {
             _.each(data.rooms, function(room) {
                 if (room != setting.mainroom) {
                     socket.leave(room);
-                    logger.emit('newEvent', 'userLeavesRoom', {'socket':socket.id, 'username':username, 'room':room});
+                    logger.emit('logging', 'userLeavesRoom', {'socket':socket.id, 'username':username, 'room':room});
 
                     // Confirm unsubscription to user
                     socket.emit('unsubscriptionConfirmed', {'room': room});
@@ -116,7 +111,7 @@ io.sockets.on('connection', function(socket) {
     // User wants to know what rooms he has joined
     socket.on('getRooms', function(data) {
         socket.emit('roomsReceived', io.sockets.manager.roomClients[socket.id]);
-        logger.emit('newEvent', 'userGetsRooms', {'socket':socket.id});
+        logger.emit('logging', 'userGetsRooms', {'socket':socket.id});
     });
 
     // Get users in given room
@@ -148,7 +143,7 @@ io.sockets.on('connection', function(socket) {
 
             // Store user data in db
             db.dbClient.hset([socket.id, 'username', data.username], redis.print);
-            logger.emit('newEvent', 'userSetsNickname', {'socket':socket.id, 'oldUsername':username, 'newUsername':data.username});
+            logger.emit('logging', 'userSetsNickname', {'socket':socket.id, 'oldUsername':username, 'newUsername':data.username});
 
             // Notify all users who belong to the same rooms that this one
             _.each(_.keys(io.sockets.adapter.rooms[socket.id]), function(room) {
@@ -165,7 +160,7 @@ io.sockets.on('connection', function(socket) {
     socket.on('newMessage', function(data) {
 
         db.dbClient.hgetall(socket.id, function(err, obj) {
-            if (err) return logger.emit('newEvent', 'error', err);
+            if (err) return logger.emit('logging', 'error', err);
 
             //console.log(socket.id);
             //console.log(_.has(io.sockets.adapter.rooms[socket.id], "/"+data.room));
@@ -177,7 +172,7 @@ io.sockets.on('connection', function(socket) {
             var message = {'room':data.room, 'username':obj.username, 'msg':data.msg, 'date':new Date()};
             // Send message to room
             io.sockets.in(data.room).emit('newMessage', message);
-            logger.emit('newEvent', 'newMessage', message);
+            logger.emit('logging', 'newMessage', message);
             //}
         });
     });
@@ -190,8 +185,8 @@ io.sockets.on('connection', function(socket) {
 
         // Get user info from db
         db.dbClient.hgetall(socket.id, function(err, obj) {
-            if (err) return logger.emit('newEvent', 'error', err);
-            logger.emit('newEvent', 'userDisconnected', {'socket':socket.id, 'username':obj.username});
+            if (err) return logger.emit('logging', 'error', err);
+            logger.emit('logging', 'userDisconnected', {'socket':socket.id, 'username':obj.username});
 
             // Notify all users who belong to the same rooms that this one
             _.each(_.keys(rooms), function(room) {
