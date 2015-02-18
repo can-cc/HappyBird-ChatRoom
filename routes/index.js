@@ -6,7 +6,6 @@ var db = require('../db');
 /* GET home page. */
 router.get('/', function(req, res, next) {
   if (req.session.user) {
-    console.log('______________________________________-'+JSON.stringify(req.session));
     res.render('index', {
       user: 'fus'
     });
