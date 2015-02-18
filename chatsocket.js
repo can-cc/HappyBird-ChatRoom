@@ -46,6 +46,7 @@ io.set('authorization', function (handshakeData, callback) {
 });
 
 io.sockets.on('connection', function(socket) {
+    var socket_username = socket.handshake.user.username;
 
     // Welcome message on connection
     socket.emit('connected', 'Welcome to the chat server');
@@ -54,7 +55,7 @@ io.sockets.on('connection', function(socket) {
     // Store user data in db
     db.dbClient.hset(['SocketID:' + socket.id, 'connectionDate', new Date()], redis.print);
     db.dbClient.hset(['SocketID:' + socket.id, 'socketID', socket.id], redis.print);
-    db.dbClient.hset(['SocketID:' + socket.id, 'username', 'anonymous'], redis.print);
+    db.dbClient.hset(['SocketID:' + socket.id, 'username', socket_username], redis.print);
 
     // Join user to 'MainRoom'
     socket.join(setting.mainroom);
@@ -62,14 +63,13 @@ io.sockets.on('connection', function(socket) {
     // Confirm subscription to user
     socket.emit('subscriptionConfirmed', {'room':setting.mainroom});
     // Notify subscription to all users in room
-    var data = {'room':setting.mainroom, 'username':'anonymous', 'msg':'----- Joined the room -----', 'id':socket.id};
+    var data = {'room':setting.mainroom, 'username':socket_username, 'msg':'----- Joined the room -----', 'id':socket.id};
     io.sockets.in(setting.mainroom).emit('userJoinsRoom', data);
 
     // User wants to subscribe to [data.rooms]
     socket.on('subscribe', function(data) {
         // Get user info from db
-        db.dbClient.hget([socket.id, 'username'], function(err, username) {
-            console.log('haha');
+        db.dbClient.hget(['SocketID:' + socket.id, 'username'], function(err, username) {
             // Subscribe user to chosen rooms
             _.each(data.rooms, function(room) {
                 room = room.replace(" ","");
@@ -89,7 +89,7 @@ io.sockets.on('connection', function(socket) {
     // User wants to unsubscribe from [data.rooms]
     socket.on('unsubscribe', function(data) {
         // Get user info from db
-        db.dbClient.hget([socket.id, 'username'], function(err, username) {
+        db.dbClient.hget(['SocketID:' + socket.id, 'username'], function(err, username) {
 
             // Unsubscribe user from chosen rooms
             _.each(data.rooms, function(room) {
@@ -116,24 +116,24 @@ io.sockets.on('connection', function(socket) {
 
     // Get users in given room
     socket.on('getUsersInRoom', function(data) {
-        // console.log('hi im getUsersInRoom');
-        // var usersInRoom = [];
-        // //socket.join(data.room);
-        // var socketsInRoom = io.sockets.adapter.rooms[data.room];
-        //
-        // console.log(io.sockets.adapter.rooms);
-        // console.log(socketsInRoom);
-        // console.log(data.room);
-        // console.log(typeof (socketsInRoom.length));
-        // for (var i=0; i<socketsInRoom.length; i++) {
-        //     db.dbClient.hgetall(socketsInRoom[i].id, function(err, obj) {
-        //         usersInRoom.push({'room':data.room, 'username':obj.username, 'id':obj.socketID});
-        //         // When we've finished with the last one, notify user
-        //         if (usersInRoom.length == socketsInRoom.length) {
-        //             socket.emit('usersInRoom', {'users':usersInRoom});
-        //         }
-        //     });
-        // }
+        console.log('hi im getUsersInRoom');
+        var usersInRoom = [];
+        //socket.join(data.room);
+        var socketsInRoom = io.sockets.adapter.rooms[data.room];
+        
+        console.log(io.sockets.adapter.rooms);
+        console.log(socketsInRoom);
+        console.log(data.room);
+        console.log(typeof (socketsInRoom.length));
+        for (var i=0; i<socketsInRoom.length; i++) {
+            db.dbClient.hgetall(socketsInRoom[i].id, function(err, obj) {
+                usersInRoom.push({'room':data.room, 'username':obj.username, 'id':obj.socketID});
+                // When we've finished with the last one, notify user
+                if (usersInRoom.length == socketsInRoom.length) {
+                    socket.emit('usersInRoom', {'users':usersInRoom});
+                }
+            });
+        }
     });
 
     // User wants to change his nickname
