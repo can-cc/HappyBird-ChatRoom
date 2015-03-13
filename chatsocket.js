@@ -143,7 +143,7 @@ io.sockets.on('connection', function(socket) {
         });
     });
 
-    // New message sent to group
+    // New message sent to group.
     socket.on('chatRoomNewMessage', function(data) {
 
         db.dbClient.hgetall('UserSocket:' + socket.id, function(err, obj) {
