@@ -1,6 +1,6 @@
 /**
  * Created by tyan on 15-2-4.
- */
+*/
 
 var app = require('./app');
 var cookieParser = require('cookie-parser');
@@ -141,7 +141,7 @@ io.sockets.on('connection', function(socket) {
                 socket.emit('peopleMsgError', errormsg);
             }
         });
-    };
+    });
 
     // New message sent to group
     socket.on('chatRoomNewMessage', function(data) {

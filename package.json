@@ -25,6 +25,7 @@
     "socket.io-redis": "^0.1.4",
     "stylus": "0.42.3",
     "underscore": "^1.7.0",
-    "validator": "^3.28.0"
+    "validator": "^3.28.0",
+    "bcrypt": "~0.8.1"
   }
 }

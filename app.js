@@ -6,8 +6,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var setting = require('./setting')
-var chatsocket = require('./chatsocket')
+var setting = require('./setting');
+var chatsocket = require('./chatsocket');
 var debug = require('debug')('HappyBird-ChatRoom:server');
 var db = require('./db');
 
