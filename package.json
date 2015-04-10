@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "bcrypt": "~0.8.1",
     "body-parser": "~1.10.2",
     "bootstrap": "^3.3.2",
     "bops": "^0.1.1",
@@ -26,6 +27,6 @@
     "stylus": "0.42.3",
     "underscore": "^1.7.0",
     "validator": "^3.28.0",
-    "bcrypt": "~0.8.1"
+    "winston": "^1.0.0"
   }
 }
