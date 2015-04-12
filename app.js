@@ -40,7 +40,10 @@ app.use(session({
 app.use('/', routes);
 // app.use('/reg', users);
 
+app.use('/foundation', express.static('www/src'))
+app.use('/raw', express.static('/home/linaro/WORKSHOP/FoundationLearn/'))
 
+//app.use('www', express.static(path.join(__dirname, './www')));
 app.use(express.static(path.join(__dirname, './web')));
 
 
@@ -98,7 +101,7 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 chatsocket.listen(server);
-\
+
 
 /**
  * Normalize a port into a number, string, or false.

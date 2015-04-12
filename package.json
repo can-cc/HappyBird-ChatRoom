@@ -16,6 +16,7 @@
     "debug": "~2.1.1",
     "ejs": "~2.1.4",
     "express": "~4.11.1",
+    "express-session": "^1.11.1",
     "mongodb": "^1.4.30",
     "morgan": "~1.5.1",
     "object-keys": "^1.0.3",
