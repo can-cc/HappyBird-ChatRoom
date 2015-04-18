@@ -10,12 +10,36 @@ var setting = require('./setting');
 var chatsocket = require('./chatsocket');
 var debug = require('debug')('HappyBird-ChatRoom:server');
 var db = require('./db');
+var multer = require('multer');
 
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
+
+app.use(multer({
+  dest: './upload',
+
+  changeDest:  function(dest, req, res) {
+    if ( req.url === '/avatar_raw/' ) {
+      return dest  + '/avatar_temp'
+    }
+    return dest;
+  },
+
+    rename: function (fieldname, filename, req, res) {
+      return filename +  new Date().toString().slice(0, 24).replace(/\s+/g, '');
+    },
+    onFileUploadStart: function(file, req, res) {
+        //Todo:
+        //should use Debug
+        //console.log(file.fieldname + ' uploaded to  ' + file.path)
+    },
+    onFileUploadComplete: function(file, req, res) {
+        //console.log(file.fieldname + ' uploaded to  ' + file.path)
+    }
+}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -38,9 +62,10 @@ app.use(session({
 
 
 app.use('/', routes);
-// app.use('/reg', users);
+//app.use(users);
 
 app.use('/foundation', express.static('www/src'))
+app.use('/upload', express.static('upload'))
 app.use('/raw', express.static('/home/linaro/WORKSHOP/FoundationLearn/'))
 
 //app.use('www', express.static(path.join(__dirname, './www')));
@@ -63,6 +88,7 @@ if (app.get('env') === 'development') {
       message: err.message,
       error: err
     });
+    console.log('error', err.message);
   });
 }
 
@@ -100,6 +126,7 @@ var server = http.createServer(app);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+
 chatsocket.listen(server);
 
 
