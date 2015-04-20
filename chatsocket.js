@@ -23,6 +23,16 @@ io.adapter(ioredis({
     redisClient: db.dbClient
 }));
 
+
+/******************************************************
+ * Authorization:
+ * @handshakeData{ String: socket-client-request}
+ * @callback {function: {error, boolean}  to next "set"}
+ * When connect start and invoke
+ * get esid from socket-client-request(handshakeData).headers.cookies
+ * get session from redis by esid
+ * set session to socket.client.request
+ ******************************************************/
 io.set('authorization', function(handshakeData, callback) {
     logger.emit('logging', 'authorization start');
 
@@ -31,7 +41,6 @@ io.set('authorization', function(handshakeData, callback) {
     var cookies = handshakeData.headers.cookie.split('; ');
     var sessionid;
     for (var i = 0; i < cookies.length; i++) {
-        console.log(cookies[i]);
         if (cookies[i].indexOf('esid') != -1) {
             sessionid = cookies[i].split('=')[1];
             break;
@@ -42,47 +51,48 @@ io.set('authorization', function(handshakeData, callback) {
     db.sessionStore.get(sid, function(err, session) {
         if (err) callback('Get session error.', false);
         handshakeData.session = session;
-        logger.emit('logging', 'session', handshakeData.session);
-        logger.emit('logging', 'session', session);
-        logger.emit('logging', 'user-socket-auth-success', JSON.stringify(session));
+      logger.emit('logging', 'user authorization success session=', session);
         return callback(null, true);
     });
 });
 
+
+/*********************************************
+ * User connnect start
+ * After Authorization
+ *********************************************/
 io.sockets.on('connection', function(socket) {
-    logger.emit('logging', 'user connect start', '');
-    logger.emit('logging', 'handshake', socket.handshake);
-    logger.emit('logging', 'socket=', socket.toString());
-    logger.emit('logging', 'handshakeData', socket.handshakeData);
-
-/*****
- *  socket.request = handshakeData
- *****/
-    logger.emit('logging', 'handshake-request-headers', socket.request.headers);
-    logger.emit('logging', 'handshake-request-headers-esid', socket.request.headers.esid);
-
-    logger.emit('logging', 'socket.rooms', socket.rooms);
-
-    var socket_username = socket.handshake.user.username;
-
+    var session = socket.request.session;
+  logger.emit('logging', 'session', session);
+    var socket_username = session.user.username;
     // Welcome message on connection
     socket.emit('connected', 'Welcome to the chat server');
     logger.emit('logging', 'userConnected', {
-        'socket': socket.id
+        'socket': socket.id,
+        'username': socket_username
     });
 
     // Store user data in db
-    db.dbClient.hset(['SocketID:' + socket.id, 'connectionDate', new Date()], redis.print);
+    db.dbClient.hset(['SocketID:' + socket.id, 'connectionDate', new Date().toString()], redis.print);
     db.dbClient.hset(['SocketID:' + socket.id, 'socketID', socket.id], redis.print);
     db.dbClient.hset(['SocketID:' + socket.id, 'username', socket_username], redis.print);
 
+  /****************************************************
+   * Add this socket to dictionary
+   ****************************************************/
+  io.userSockets = io.userSockets || {};
+  io.userSockets[socket.id] = socket;
+
     db.dbClient.hset(['UserSocket:' + socket_username, 'socketID', socket.id], redis.print);
     // Join user to 'MainRoom'
+
     socket.join(setting.mainroom);
-    logger.emit('logging', 'userJoinsRoom', {
+
+logger.emit('logging', 'userJoinsRoom', {
         'socket': socket.id,
         'room': setting.mainroom
     });
+
     // Confirm subscription to user
     socket.emit('subscriptionConfirmed', {
         'room': setting.mainroom
@@ -94,6 +104,7 @@ io.sockets.on('connection', function(socket) {
         'msg': '----- Joined the room -----',
         'id': socket.id
     };
+
     io.sockets.in(setting.mainroom).emit('userJoinsRoom', data);
 
     // User wants to subscribe to [data.rooms]
@@ -168,8 +179,31 @@ io.sockets.on('connection', function(socket) {
         });
     });
 
+  /**************************************
+   *getActiveUser
+   *
+   * @options should be null
+   ***************************************/
+  socket.on('getActiveUser', function(options){
+    db.dbClient.keys('UserSocket:*', function(err,resp){
+      if(err){
+        return logger.emit('logging', 'error: getActiveUser', err);
+      }
+      logger.emit('logging', 'active users ', resp);
+      var activeUsers = [];
+      resp.forEach(function(users){
+        activeUsers.push(users.split(':')[1]);
+      });
+      logger.emit('logging', 'activeUsers ', activeUsers);
+    });
+
+  });
+
+
     // Get users in given room
     socket.on('getUsersInRoom', function(data) {
+      logger.emit('logging', 'getUsersInRoom start', data);
+
         var usersInRoom = [];
         //socket.join(data.room);
         var socketsInRoom = io.sockets.adapter.rooms[data.room];
@@ -181,7 +215,7 @@ io.sockets.on('connection', function(socket) {
                     'id': obj.socketID
                 });
                 // When we've finished with the last one, notify user
-                if (usersInRoom.length == socketsInRoom.length) {
+                if (usersInRoom.length === socketsInRoom.length) {
                     socket.emit('usersInRoom', {
                         'users': usersInRoom
                     });
@@ -209,6 +243,33 @@ io.sockets.on('connection', function(socket) {
         });
     });
 
+  /****************************************************
+   * Two User Chat Message
+   ****************************************************/
+  socket.on('UserSendMessage', function(data){
+    logger.emit('logging', 'get User send to other mesage',data);
+    if(data.target){
+      db.dbClient.hgetall('UserSocket:' + data.target, function(err, resp){
+        if(err) {
+          logger.emit('logging', 'error- get User socket id', 'not found in redis');
+          return socket.emit('receiveOtherMessage',{err: 'Not Found Target User Connection(socket)'});
+        }
+        logger.emit('logging', 'target user socket', resp);
+        logger.emit('logging', 'target user socket', typeof(socket.nsp.sockets[0]));
+
+        io.userSockets[resp.socketID].emit('receiveOtherMessage', 'test');
+        // socket.nsp.sockets[0].emit('receiveOtherMessage', 'test');
+        // socket.nsp.sockets[1].emit('receiveOtherMessage', 'test');
+        // socket.nsp.emit('receiveOtherMessage', 'test');
+        logger.emit('logging', 'sse');
+      });
+    } else{
+      logger.emit('logging', 'error- get User socket id', 'not found');
+      socket.emit('receiveOtherMessage', {err: 'Not Found Target User'});
+    }
+  });
+
+
     // New message sent to group.
     socket.on('chatRoomNewMessage', function(data) {
 
@@ -224,6 +285,7 @@ io.sockets.on('connection', function(socket) {
             logger.emit('logging', 'newMessage', message);
         });
     });
+
 
     // Clean up on disconnect
     socket.on('disconnect', function() {
@@ -250,6 +312,10 @@ io.sockets.on('connection', function(socket) {
                         'id': obj.socketID
                     };
                     io.sockets.in(room).emit('userLeavesRoom', message);
+
+                  /******
+                   * Namespace room remove sockets
+                   *******/
                 }
             });
         });
@@ -263,3 +329,6 @@ io.sockets.on('connection', function(socket) {
 });
 
 module.exports = io;
+
+
+
