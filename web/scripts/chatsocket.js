@@ -49,6 +49,7 @@
     //    //$('#modal_joinroom').modal('hide');
     //});
 
+
     // Unsubscription to room confirmed
     //socket.on('unsubscriptionConfirmed', function(data) {
     //    // Remove room space in interface

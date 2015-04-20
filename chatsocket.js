@@ -15,6 +15,8 @@ var _ = require('underscore');
 var helper = require('./routes/helper');
 var signature = require('cookie-signature');
 
+var debug = require('debug')('chatsocket');
+
 io.adapter(ioredis({
     redisPub: db.pub,
     redisSub: db.sub,
@@ -22,11 +24,10 @@ io.adapter(ioredis({
 }));
 
 io.set('authorization', function(handshakeData, callback) {
-  logger.emit('logging', 'authorization start');
+    logger.emit('logging', 'authorization start');
 
     if (!handshakeData.headers.cookie)
         return callback('No cookie transmitted.', false);
-
     var cookies = handshakeData.headers.cookie.split('; ');
     var sessionid;
     for (var i = 0; i < cookies.length; i++) {
@@ -37,19 +38,31 @@ io.set('authorization', function(handshakeData, callback) {
         }
     }
     var sid = encodeURI(sessionid).slice(6, sessionid.indexOf('.') + 2);
-  logger.emit('logging', 'sid=', sid);
+    logger.emit('logging', 'sid=', sid);
     db.sessionStore.get(sid, function(err, session) {
         if (err) callback('Get session error.', false);
         handshakeData.session = session;
+        logger.emit('logging', 'session', handshakeData.session);
+        logger.emit('logging', 'session', session);
         logger.emit('logging', 'user-socket-auth-success', JSON.stringify(session));
         return callback(null, true);
     });
 });
 
 io.sockets.on('connection', function(socket) {
-  logger.emit('logging', 'user connect start', null);
-  logger.emit('logging', socket.handshake.user, null);
-  logger.emit('logging', 'handshake', socket.handshake);
+    logger.emit('logging', 'user connect start', '');
+    logger.emit('logging', 'handshake', socket.handshake);
+    logger.emit('logging', 'socket=', socket.toString());
+    logger.emit('logging', 'handshakeData', socket.handshakeData);
+
+/*****
+ *  socket.request = handshakeData
+ *****/
+    logger.emit('logging', 'handshake-request-headers', socket.request.headers);
+    logger.emit('logging', 'handshake-request-headers-esid', socket.request.headers.esid);
+
+    logger.emit('logging', 'socket.rooms', socket.rooms);
+
     var socket_username = socket.handshake.user.username;
 
     // Welcome message on connection

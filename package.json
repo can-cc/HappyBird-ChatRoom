@@ -14,7 +14,7 @@
     "connect-redis": "^2.2.0",
     "cookie-parser": "~1.3.3",
     "cookie-signature": "^1.0.6",
-    "debug": "~2.1.1",
+    "debug": "^2.1.3",
     "easyimage": "^1.3.0",
     "ejs": "~2.1.4",
     "express": "~4.11.1",
