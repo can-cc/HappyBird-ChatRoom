@@ -83,7 +83,12 @@ io.sockets.on('connection', function(socket) {
   io.userSockets = io.userSockets || {};
   io.userSockets[socket.id] = socket;
 
-    db.dbClient.hset(['UserSocket:' + socket_username, 'socketID', socket.id], redis.print);
+  db.dbClient.hmset(['UserSocket:' + socket_username, 'socketID', socket.id, 'avatar', session.user.avatar], redis.print);
+  var userData = {
+    username: session.user.username,
+    avatar: session.user.avatar
+  };
+  db.dbClient.hset('ActiveUser', session.user.username, JSON.stringify(userData), redis.print);
     // Join user to 'MainRoom'
 
     socket.join(setting.mainroom);
@@ -180,11 +185,11 @@ logger.emit('logging', 'userJoinsRoom', {
     });
 
   /**************************************
-   *getActiveUser
+   *getActiveUser only return name
    *
    * @options should be null
    ***************************************/
-  socket.on('getActiveUser', function(options){
+  socket.on('getActiveUserName', function(options){
     db.dbClient.keys('UserSocket:*', function(err,resp){
       if(err){
         return logger.emit('logging', 'error: getActiveUser', err);
@@ -195,7 +200,33 @@ logger.emit('logging', 'userJoinsRoom', {
         activeUsers.push(users.split(':')[1]);
       });
       logger.emit('logging', 'activeUsers ', activeUsers);
+      socket.emit('receiveActiveUserName', activeUsers);
     });
+
+  });
+
+
+  /**************************************
+   *getActiveUser
+   *
+   * return user all
+   * @options should be null
+   ***************************************/
+  socket.on('getActiveUser', function(options){
+    db.dbClient.hgetall('ActiveUser', function(err, resp){
+      if(err){
+        return socket.emit('receiveActiveUser', {error: 'Unknown!'});
+      }
+      logger.emit('logging', 'All Active User!', resp);
+      socket.emit('receiveActiveUser', resp);
+    });
+    // db.dbClient.hscan('UserSocket','*', function(err,resp){
+    //   if(err){
+    //     return logger.emit('logging', 'error: getActiveUser', err);
+    //   }
+    //   logger.emit('logging', 'active users(all) ', resp);
+    //   socket.emit('receiveActiveUser', resp);
+    // });
 
   });
 
@@ -323,7 +354,7 @@ logger.emit('logging', 'userJoinsRoom', {
         // Delete user from db
         db.dbClient.del('SocketID:' + socket.id, redis.print);
         db.dbClient.del('UserSocket:' + socket_username, redis.print);
-
+      db.dbClient.hdel('ActiveUser', socket_username, redis.print);
 
     });
 });
