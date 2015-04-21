@@ -77,18 +77,7 @@ io.sockets.on('connection', function(socket) {
     db.dbClient.hset(['SocketID:' + socket.id, 'socketID', socket.id], redis.print);
     db.dbClient.hset(['SocketID:' + socket.id, 'username', socket_username], redis.print);
 
-  /****************************************************
-   * Add this socket to dictionary
-   ****************************************************/
-  io.userSockets = io.userSockets || {};
-  io.userSockets[socket.id] = socket;
-
-  db.dbClient.hmset(['UserSocket:' + socket_username, 'socketID', socket.id, 'avatar', session.user.avatar], redis.print);
-  var userData = {
-    username: session.user.username,
-    avatar: session.user.avatar
-  };
-  db.dbClient.hset('ActiveUser', session.user.username, JSON.stringify(userData), redis.print);
+    db.dbClient.hset(['UserSocket:' + socket_username, 'socketID', socket.id], redis.print);
     // Join user to 'MainRoom'
 
     socket.join(setting.mainroom);
@@ -185,11 +174,11 @@ logger.emit('logging', 'userJoinsRoom', {
     });
 
   /**************************************
-   *getActiveUser only return name
+   *getActiveUser
    *
    * @options should be null
    ***************************************/
-  socket.on('getActiveUserName', function(options){
+  socket.on('getActiveUser', function(options){
     db.dbClient.keys('UserSocket:*', function(err,resp){
       if(err){
         return logger.emit('logging', 'error: getActiveUser', err);
@@ -200,33 +189,7 @@ logger.emit('logging', 'userJoinsRoom', {
         activeUsers.push(users.split(':')[1]);
       });
       logger.emit('logging', 'activeUsers ', activeUsers);
-      socket.emit('receiveActiveUserName', activeUsers);
     });
-
-  });
-
-
-  /**************************************
-   *getActiveUser
-   *
-   * return user all
-   * @options should be null
-   ***************************************/
-  socket.on('getActiveUser', function(options){
-    db.dbClient.hgetall('ActiveUser', function(err, resp){
-      if(err){
-        return socket.emit('receiveActiveUser', {error: 'Unknown!'});
-      }
-      logger.emit('logging', 'All Active User!', resp);
-      socket.emit('receiveActiveUser', resp);
-    });
-    // db.dbClient.hscan('UserSocket','*', function(err,resp){
-    //   if(err){
-    //     return logger.emit('logging', 'error: getActiveUser', err);
-    //   }
-    //   logger.emit('logging', 'active users(all) ', resp);
-    //   socket.emit('receiveActiveUser', resp);
-    // });
 
   });
 
@@ -273,33 +236,6 @@ logger.emit('logging', 'userJoinsRoom', {
             }
         });
     });
-
-  /****************************************************
-   * Two User Chat Message
-   ****************************************************/
-  socket.on('UserSendMessage', function(data){
-    logger.emit('logging', 'get User send to other mesage',data);
-    if(data.target){
-      db.dbClient.hgetall('UserSocket:' + data.target, function(err, resp){
-        if(err) {
-          logger.emit('logging', 'error- get User socket id', 'not found in redis');
-          return socket.emit('receiveOtherMessage',{err: 'Not Found Target User Connection(socket)'});
-        }
-        logger.emit('logging', 'target user socket', resp);
-        logger.emit('logging', 'target user socket', typeof(socket.nsp.sockets[0]));
-
-        io.userSockets[resp.socketID].emit('receiveOtherMessage', 'test');
-        // socket.nsp.sockets[0].emit('receiveOtherMessage', 'test');
-        // socket.nsp.sockets[1].emit('receiveOtherMessage', 'test');
-        // socket.nsp.emit('receiveOtherMessage', 'test');
-        logger.emit('logging', 'sse');
-      });
-    } else{
-      logger.emit('logging', 'error- get User socket id', 'not found');
-      socket.emit('receiveOtherMessage', {err: 'Not Found Target User'});
-    }
-  });
-
 
     // New message sent to group.
     socket.on('chatRoomNewMessage', function(data) {
@@ -353,12 +289,9 @@ logger.emit('logging', 'userJoinsRoom', {
         // Delete user from db
         db.dbClient.del('SocketID:' + socket.id, redis.print);
         db.dbClient.del('UserSocket:' + socket_username, redis.print);
-      db.dbClient.hdel('ActiveUser', socket_username, redis.print);
+
 
     });
 });
 
 module.exports = io;
-
-
-

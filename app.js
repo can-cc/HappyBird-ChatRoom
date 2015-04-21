@@ -64,9 +64,9 @@ app.use(session({
 app.use('/', routes);
 //app.use(users);
 
-app.use('/foundation', express.static('www/src'))
-app.use('/upload', express.static('upload'))
-app.use('/raw', express.static('/home/linaro/WORKSHOP/FoundationLearn/'))
+app.use(express.static('www/src'));
+app.use('/upload', express.static('upload'));
+app.use('/raw', express.static('/home/linaro/WORKSHOP/FoundationLearn/'));
 
 //app.use('www', express.static(path.join(__dirname, './www')));
 app.use(express.static(path.join(__dirname, './web')));

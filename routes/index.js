@@ -6,13 +6,13 @@ var easyimg = require('easyimage');
 var async = require('async');
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-    if (req.session.user) {
-        res.render('index', {
-            user: 'fus'
-        });
-    } else res.redirect('/login.html');
-});
+// router.get('/', function(req, res, next) {
+//     if (req.session.user) {
+//         res.render('index', {
+//             user: 'fus'
+//         });
+//     } else res.redirect('/login.html');
+// });
 
 router.get('/reg', function(req, res, next) {
     res.redirect('/reg.html');
