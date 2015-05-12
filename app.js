@@ -23,7 +23,7 @@ app.use(multer({
 
   changeDest:  function(dest, req, res) {
     if ( req.url === '/avatar_raw/' ) {
-      return dest  + '/avatar_temp'
+      return dest  + '/avatar_temp';
     }
     return dest;
   },
@@ -159,7 +159,7 @@ function onError(error) {
     throw error;
   }
 
-  var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port
+  var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {

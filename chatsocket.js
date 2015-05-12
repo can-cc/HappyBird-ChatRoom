@@ -64,6 +64,12 @@ io.set('authorization', function(handshakeData, callback) {
 io.sockets.on('connection', function(socket) {
     var session = socket.request.session;
   logger.emit('logging', 'session', session);
+
+  var userData = {
+    username: session.user.username,
+    avatar: session.user.avatar
+  };
+
     var socket_username = session.user.username;
     // Welcome message on connection
     socket.emit('connected', 'Welcome to the chat server');
@@ -76,6 +82,7 @@ io.sockets.on('connection', function(socket) {
     db.dbClient.hset(['SocketID:' + socket.id, 'connectionDate', new Date().toString()], redis.print);
     db.dbClient.hset(['SocketID:' + socket.id, 'socketID', socket.id], redis.print);
     db.dbClient.hset(['SocketID:' + socket.id, 'username', socket_username], redis.print);
+  db.dbClient.hset('ActiveUser', session.user.username, JSON.stringify(userData), redis.print);
 
   /****************************************************
    * Add this socket to dictionary
@@ -84,18 +91,14 @@ io.sockets.on('connection', function(socket) {
   io.userSockets[socket.id] = socket;
 
   db.dbClient.hmset(['UserSocket:' + socket_username, 'socketID', socket.id, 'avatar', session.user.avatar], redis.print);
-  var userData = {
-    username: session.user.username,
-    avatar: session.user.avatar
-  };
-  db.dbClient.hset('ActiveUser', session.user.username, JSON.stringify(userData), redis.print);
+
     // Join user to 'MainRoom'
 
-    socket.join(setting.mainroom);
+  socket.join(setting.mainroom);
 
-logger.emit('logging', 'userJoinsRoom', {
-        'socket': socket.id,
-        'room': setting.mainroom
+  logger.emit('logging', 'userJoinsRoom', {
+    'socket': socket.id,
+    'room': setting.mainroom
     });
 
     // Confirm subscription to user
@@ -104,12 +107,11 @@ logger.emit('logging', 'userJoinsRoom', {
     });
     // Notify subscription to all users in room
     var data = {
-        'room': setting.mainroom,
-        'username': socket_username,
-        'msg': '----- Joined the room -----',
-        'id': socket.id
+      'room': setting.mainroom,
+      'username': socket_username,
+      'msg': '----- Joined the room -----',
+      'id': socket.id
     };
-
     io.sockets.in(setting.mainroom).emit('userJoinsRoom', data);
 
     // User wants to subscribe to [data.rooms]
@@ -130,7 +132,6 @@ logger.emit('logging', 'userJoinsRoom', {
                 socket.emit('subscriptionConfirmed', {
                     'room': room
                 });
-
                 // Notify subscription to all users in room
                 var message = {
                     'room': room,
@@ -184,6 +185,15 @@ logger.emit('logging', 'userJoinsRoom', {
         });
     });
 
+  /****************************************************
+   * User want to know who am him
+   ****************************************************/
+  socket.on('getMyself', function(data){
+    socket.emit('whoami', {
+      username: session.user.username
+    });
+  });
+
   /**************************************
    *getActiveUser only return name
    *
@@ -217,8 +227,10 @@ logger.emit('logging', 'userJoinsRoom', {
       if(err){
         return socket.emit('receiveActiveUser', {error: 'Unknown!'});
       }
-      logger.emit('logging', 'All Active User!', resp);
-      socket.emit('receiveActiveUser', resp);
+      logger.emit('logging', 'active users', resp);
+      var activeUsers = _.values(resp);
+      logger.emit('logging', 'All Active User!', activeUsers);
+      socket.emit('receiveActiveUser', activeUsers);
     });
     // db.dbClient.hscan('UserSocket','*', function(err,resp){
     //   if(err){
@@ -288,7 +300,15 @@ logger.emit('logging', 'userJoinsRoom', {
         logger.emit('logging', 'target user socket', resp);
         logger.emit('logging', 'target user socket', typeof(socket.nsp.sockets[0]));
 
-        io.userSockets[resp.socketID].emit('receiveOtherMessage', 'test');
+      //io.userSockets[resp.socketID].emit('receiveOtherMessage', 'test');
+        var message = {
+          fromUser: session.user.username,
+          time: data.time,
+          message: data.message
+        };
+        if (io.sockets.connected[resp.socketID]) {
+          io.sockets.connected[resp.socketID].emit('receiveOtherMessage', message);
+        }
         // socket.nsp.sockets[0].emit('receiveOtherMessage', 'test');
         // socket.nsp.sockets[1].emit('receiveOtherMessage', 'test');
         // socket.nsp.emit('receiveOtherMessage', 'test');
@@ -350,9 +370,10 @@ logger.emit('logging', 'userJoinsRoom', {
             });
         });
 
+      logger.emit('logging', 'user logout' ,socket_username);
         // Delete user from db
-        db.dbClient.del('SocketID:' + socket.id, redis.print);
-        db.dbClient.del('UserSocket:' + socket_username, redis.print);
+      db.dbClient.del('SocketID:' + socket.id, redis.print);
+      db.dbClient.del('UserSocket:' + socket_username, redis.print);
       db.dbClient.hdel('ActiveUser', socket_username, redis.print);
 
     });

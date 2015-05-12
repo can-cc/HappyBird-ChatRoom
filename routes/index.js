@@ -6,13 +6,11 @@ var easyimg = require('easyimage');
 var async = require('async');
 
 /* GET home page. */
-// router.get('/', function(req, res, next) {
-//     if (req.session.user) {
-//         res.render('index', {
-//             user: 'fus'
-//         });
-//     } else res.redirect('/login.html');
-// });
+router.get('/', function(req, res, next) {
+    if (req.session.user) {
+        next();
+    } else res.redirect('/login.html');
+});
 
 router.get('/reg', function(req, res, next) {
     res.redirect('/reg.html');
@@ -80,9 +78,9 @@ router.post('/avatar_raw', function(req, res, next) {
     if (!req.session.user) {
         return res.redirect('/login.html');
     }
-    var keys = []
+    var keys = [];
     for (var key in req.files) {
-        keys.push(key)
+        keys.push(key);
     }
     //I only want first element, may be can opti..
     console.log('debug', req.session.user);
@@ -92,7 +90,7 @@ router.post('/avatar_raw', function(req, res, next) {
         src: req.files[keys[0]].path
     } || {
         Error: 'unkown!'
-    })
+    });
     res.end();
 });
 
